@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Fasito</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    
+    <div class="matrix" id="matrix"></div>
+    <div id="app">Loading...</div>
+        <svg id="loading-spinner" class="loading-progress">
+            <circle r="40%" cx="50%" cy="50%" />
+            <circle r="40%" cx="50%" cy="50%" />
+        </svg>
+    
+        <div class="loading-progress-text" style="display: none;"></div>
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var spinner = document.getElementById('loading-spinner');
+        if (spinner) {
+            spinner.style.display = 'none';
+        }
+    });
+
+    const matrix = document.getElementById('matrix');
+    const characters = "FASITOFASITOFASITOFASITOFASITOFASITO666FASITOFASITOFASITO666FASITOFASITOFASITO";
+
+    setInterval(() => {
+        matrix.innerHTML = '';
+        for (let i = 0; i < window.innerWidth / 15; i++) {
+            const span = document.createElement('span');
+            span.textContent = characters[Math.floor(Math.random() * characters.length)];
+            span.style.animationDelay = Math.random() * 2 + 's';
+            
+            // Set a random position for the character span across the screen width
+            span.style.left = Math.random() * window.innerWidth + 'px';
+            
+            matrix.appendChild(span);
+        }
+    }, 1000);
+    </script>
+
+
+</body>
+
+</html>
