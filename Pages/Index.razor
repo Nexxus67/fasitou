@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@using fasito.Models  
+@using fasito.Services
 
 <h1>Fasito Donations</h1>
 
@@ -14,23 +16,18 @@
         <label for="amount">Donation Amount:</label>
         <input type="number" id="amount" placeholder="50" />
         
-        <button class="donate-btn">Donate</button>
+        <button class="donate-btn" @onclick="SubmitDonation">Donate</button>
     </div>
 </div>
+
+@inject DonationService DonationService
 
 @code {
     private Donation donation = new Donation();
 
-
-    [Inject]
-    private DonationService DonationService { get; set; }
-    
-
-    private async Task SubmitDonation()
+    private void SubmitDonation()
     {
-        if (donation.Amount > 0)
-        {
-            await DonationService.AddDonation(donation);
+        @* DonationService.AddDonation(donation); *@
+        donation = new Donation();
     }
-}
 }

@@ -1,31 +1,37 @@
 using fasito.Models;
-using BuyMeACoffeeClone.Data;
 using System.Threading.Tasks;
+using System;
+using System.Collections.Generic; // Added for List<T>
+using System.Net.Mail;
+using System.Net;
 
 namespace fasito.Services
 {
     public class DonationService : IDonationService
     {
-        private readonly AppDbContext _context;
+        // Replacing AppDbContext with a List to mock in-memory data
+        private readonly List<Donation> _donations = new List<Donation>();
 
-        public DonationService(AppDbContext context)
-        {
-            _context = context;
-        }
+        // Removing the constructor as we don't need to initialize anything specific
 
         public async Task AddDonation(Donation donation)
         {
-            _context.Donations.Add(donation);
-            await _context.SaveChangesAsync();
+            if (donation == null) throw new ArgumentNullException(nameof(donation));
+
+            _donations.Add(donation);
+            await Task.CompletedTask; // Mocks the asynchronous nature of the original SaveChangesAsync method
         }
 
         public async Task<List<Donation>> GetDonationsAsync()
         {
-            return await _context.Donations.ToListAsync();
+            // Simulating asynchronous operation
+            return await Task.FromResult(_donations);
         }
 
         public async Task<Result> AddDonationAsync(Donation donation)
         {
+            if (donation == null) throw new ArgumentNullException(nameof(donation));
+            
             if (donation.Amount <= 0)
             {
                 return Result.Fail("Donation amount must be greater than zero.");
@@ -33,8 +39,8 @@ namespace fasito.Services
 
             try
             {
-                _context.Donations.Add(donation);
-                await _context.SaveChangesAsync();
+                _donations.Add(donation);
+                await Task.CompletedTask;
                 return Result.Ok();
             }
             catch (Exception ex)
@@ -44,23 +50,23 @@ namespace fasito.Services
         }
 
         public async Task SendDonationConfirmationEmailAsync(Donation donation, string userEmail)
+        {
+            if (donation == null) throw new ArgumentNullException(nameof(donation));
+
+            var smtpClient = new SmtpClient("your-smtp-server.com")
             {
-                var smtpClient = new SmtpClient("your-smtp-server.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential("your-email@example.com", "your-password"),
-                    EnableSsl = true,
-                };
+                Port = 587,
+                Credentials = new NetworkCredential("your-email@example.com", "your-password"),
+                EnableSsl = true,
+            };
 
-                var message = new MailMessage("your-email@example.com", userEmail)
-                {
-                    Subject = "Donation Confirmation",
-                    Body = $"Thank you for your donation of ${donation.Amount}.",
-                };
+            var message = new MailMessage("your-email@example.com", userEmail)
+            {
+                Subject = "Donation Confirmation",
+                Body = $"Thank you for your donation of ${donation.Amount}.",
+            };
 
-                await smtpClient.SendMailAsync(message);
-            }
-
-        
+            await smtpClient.SendMailAsync(message);
+        }
     }
 }
