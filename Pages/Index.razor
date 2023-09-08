@@ -17,3 +17,20 @@
         <button class="donate-btn">Donate</button>
     </div>
 </div>
+
+@code {
+    private Donation donation = new Donation();
+
+
+    [Inject]
+    private DonationService DonationService { get; set; }
+    
+
+    private async Task SubmitDonation()
+    {
+        if (donation.Amount > 0)
+        {
+            await DonationService.AddDonation(donation);
+    }
+}
+}

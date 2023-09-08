@@ -10,3 +10,8 @@ builder.RootComponents.Add<App>("#app");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 await builder.Build().RunAsync();
+builder.Configuration.AddJsonFile("appsettings.json");
+builder.Logging.SetMinimumLevel(LogLevel.Information);
+builder.Services.AddSingleton<ErrorHandlingService>();
+builder.Services.AddScoped<IMyService, MyService>();
+builder.Services.AddRouting();
